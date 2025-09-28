@@ -8,11 +8,12 @@ class BikeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Bike
+        model = Event
         fields = "__all__"
+
 class BikeImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Bike
+        model = BikeImage
         fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):

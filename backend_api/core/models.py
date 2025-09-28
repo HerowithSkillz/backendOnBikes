@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
+
 
 class Bike(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bikes')
@@ -13,9 +13,6 @@ class Bike(models.Model):
 
     def __str__(self):
         return f"{self.brand} {self.name} ({self.year})"
-    
-    def get_absolute_url(self):
-        return reverse('bike-detail', kwargs={'pk': self.pk})
 
 class Event(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hosted_events')
@@ -28,9 +25,6 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
-
-    def get_absolute_url(self):
-        return reverse('event-detail', kwargs={'pk': self.pk})
 
 class BikeImage(models.Model):
     bike = models.ForeignKey('Bike', on_delete=models.CASCADE, related_name='additional_images')
