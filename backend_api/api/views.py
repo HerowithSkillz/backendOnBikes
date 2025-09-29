@@ -21,7 +21,7 @@ def bikesView(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def bikeDetailView(request, pk):
     try:
         bike = Bike.objects.get(pk=pk)
@@ -31,4 +31,13 @@ def bikeDetailView(request, pk):
     if request.method == 'GET':
         serializer = BikeSerializer(bike)
         return Response(serializer.data ,status=status.HTTP_200_OK)
-    
+    elif request.method == 'PUT':
+        serializer = BikeSerializer(bike,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        bike.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
