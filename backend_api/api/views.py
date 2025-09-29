@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from core.models import Bike
+
+
 # Create your views here.
 def bikesView(request):
-    bikes = {
-        'brand': 'HONDA',
-        'name': 'CBR 1000RR',
-        'year': 2025
-    }
-    return JsonResponse(bikes)
+    bikes = Bike.objects.all()
+    bikes_list = list(bikes.values())
+    return JsonResponse(bikes_list, safe=False)
