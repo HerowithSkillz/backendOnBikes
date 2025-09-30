@@ -1,4 +1,4 @@
-# from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 # from django.http import JsonResponse
 from core.models import Bike
 from .serializers import BikeSerializer, EventSerializer
@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from events.models import Events
 from django.http import Http404
-from rest_framework import mixins, generics
+from rest_framework import mixins, generics, viewsets
 
 # Create your views here.
 #This by using function based views...
@@ -110,3 +110,50 @@ def bikeDetailView(request, pk):
 #     def delete(self, request, pk):
 #         return self.destroy(request, pk)
 
+'''
+# GENERICs
+class Event(generics.ListCreateAPIView):
+    queryset = Events.objects.all()
+    serializer_class = EventSerializer
+
+#Generics
+class EventDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Events.objects.all()
+    serializer_class = EventSerializer
+    lookup_field = 'pk'
+'''
+
+# class EventViewset(viewsets.ViewSet):
+#     def list(self, request):
+#         queryset = Events.objects.all()
+#         serializer = EventSerializer(queryset, many=True)
+#         return Response(serializer.data)
+    
+#     def create(self, request):
+#         serializer= EventSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors)
+    
+#     def retrieve(self, request, pk=None):
+#         event = get_object_or_404(Events, pk=pk)
+#         serializer = EventSerializer(event)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+#     def update(self, request, pk=None):
+#         event = get_object_or_404(Events, pk=pk)
+#         serializer = EventSerializer(event, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors)
+    
+#     def delete(self, request, pk=None):
+#         event = get_object_or_404(Events, pk=pk)
+#         event.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class EventViewset(viewsets.ModelViewSet):
+    queryset = Events.objects.all()
+    serializer_class = EventSerializer
