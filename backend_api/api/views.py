@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from events.models import Events
 from django.http import Http404
+from rest_framework import mixins, generics
 
 # Create your views here.
 #This by using function based views...
@@ -47,41 +48,65 @@ def bikeDetailView(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-class Event(APIView):
-    def get(self, request):
-        events = Events.objects.all()
-        serializer  = EventSerializer(events, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+# class Event(APIView):
+#     def get(self, request):
+#         events = Events.objects.all()
+#         serializer  = EventSerializer(events, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request):
-        serializer = EventSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = EventSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class EventDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Events.objects.get(pk=pk)
-        except Events.DoesNotExist:
-            raise Http404
+# class EventDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Events.objects.get(pk=pk)
+#         except Events.DoesNotExist:
+#             raise Http404
         
-    def get(self, request, pk):
-        events = self.get_object(pk)
-        serializer= EventSerializer(events)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     def get(self, request, pk):
+#         events = self.get_object(pk)
+#         serializer= EventSerializer(events)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def put(self, request, pk):
-        events = self.get_object(pk)
-        serializer = EventSerializer(events, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def put(self, request, pk):
+#         events = self.get_object(pk)
+#         serializer = EventSerializer(events, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, pk):
-        events = self.get_object(pk)
-        events.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def delete(self, request, pk):
+#         events = self.get_object(pk)
+#         events.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#Mixinis 
+# class Event(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+#     queryset = Events.objects.all()
+#     serializer_class = EventSerializer
+
+#     def get(self, request):
+#         return self.list(request)
     
+#     def post(self, request):
+#         return self.create(request)
+    
+# class EventDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin ,generics.GenericAPIView):
+#     queryset= Events.objects.all()
+#     serializer_class = EventSerializer
+
+#     def get(self, request, pk):
+#         return self.retrieve(request, pk)
+    
+#     def put(self, request, pk):
+#         return self.update(request, pk)
+    
+#     def delete(self, request, pk):
+#         return self.destroy(request, pk)
+
